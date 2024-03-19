@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="HybrisProjectSettings">
+    <option name="availableExtensions">
+      <map>
+        <entry key="azurecloudhotfolder">
+          <value>
+            <ExtensionDescriptor>
+              <option name="name" value="azurecloudhotfolder" />
+              <option name="type" value="CCV2" />
+            </ExtensionDescriptor>
+          </value>
+        </entry>
+        <entry key="cloudcommons">
+          <value>
+            <ExtensionDescriptor>
+              <option name="name" value="cloudcommons" />
+              <option name="type" value="CCV2" />
+            </ExtensionDescriptor>
+          </value>
+        </entry>
+        <entry key="cloudhotfolder">
+          <value>
+            <ExtensionDescriptor>
+              <option name="name" value="cloudhotfolder" />
+              <option name="type" value="CCV2" />
+            </ExtensionDescriptor>
+          </value>
+        </entry>
+        <entry key="cloudmediaconversion">
+          <value>
+            <ExtensionDescriptor>
+              <option name="name" value="cloudmediaconversion" />
+              <option name="type" value="CCV2" />
+            </ExtensionDescriptor>
+          </value>
+        </entry>
+        <entry key="cloudstorecockpits">
+          <value>
+            <ExtensionDescriptor>
+              <option name="name" value="cloudstorecockpits" />
+              <option name="type" value="CCV2" />
+            </ExtensionDescriptor>
+          </value>
+        </entry>
+        <entry key="cloudstorecore">
+          <value>
+            <ExtensionDescriptor>
+              <option name="name" value="cloudstorecore" />
+              <option name="type" value="CCV2" />
+            </ExtensionDescriptor>
+          </value>
+        </entry>
+        <entry key="cloudstorefacades">
+          <value>
+            <ExtensionDescriptor>
+              <option name="name" value="cloudstorefacades" />
+              <option name="type" value="CCV2" />
+            </ExtensionDescriptor>
+          </value>
+        </entry>
+        <entry key="cloudstorefulfilmentprocess">
+          <value>
+            <ExtensionDescriptor>
+              <option name="name" value="cloudstorefulfilmentprocess" />
+              <option name="type" value="CCV2" />
+            </ExtensionDescriptor>
+          </value>
+        </entry>
+        <entry key="cloudstoreinitialdata">
+          <value>
+            <ExtensionDescriptor>
+              <option name="name" value="cloudstoreinitialdata" />
+              <option name="type" value="CCV2" />
+            </ExtensionDescriptor>
+          </value>
+        </entry>
+        <entry key="cloudstorestorefront">
+          <value>
+            <ExtensionDescriptor>
+              <option name="name" value="cloudstorestorefront" />
+              <option name="type" value="CCV2" />
+            </ExtensionDescriptor>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="moduleSettings">
+      <map>
+        <entry key="dubidubibank">
+          <value>
+            <ModuleSettings />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
