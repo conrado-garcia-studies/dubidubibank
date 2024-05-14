@@ -85,14 +85,5 @@
         </entry>
       </map>
     </option>
-    <option name="moduleSettings">
-      <map>
-        <entry key="dubidubibank">
-          <value>
-            <ModuleSettings />
-          </value>
-        </entry>
-      </map>
-    </option>
   </component>
 </project>
