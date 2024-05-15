@@ -2,7 +2,7 @@ package br.dubidubibank.utils;
 
 import br.dubidubibank.entities.AccountType;
 import br.dubidubibank.entities.Command;
-import br.dubidubibank.entities.DescriptedEntity;
+import br.dubidubibank.entities.Descripted;
 import java.time.LocalTime;
 import java.util.Collection;
 import java.util.List;
@@ -16,7 +16,7 @@ public interface CliUtils {
 
   String findCommandInputDescriptions(Collection<Command> commands);
 
-  String findIndexSelectionInputDescriptions(List<? extends DescriptedEntity> entities);
+  String findIndexSelectionInputDescriptions(List<? extends Descripted> entities);
 
   List<Command> findRestrictableCommands(Collection<Command> commands);
 

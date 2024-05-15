@@ -14,7 +14,7 @@ import lombok.*;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @ToString(callSuper = true)
-public class AccountType extends AbstractEntity implements DescriptedEntity {
+public class AccountType extends AbstractEntity implements Descripted {
   @Getter(AccessLevel.NONE)
   @Size(max = 255)
   private String cliInput;

@@ -33,19 +33,6 @@ public class DefaultTransactionExportService implements TransactionExportService
   @NonNull private TransactionService transactionService;
 
   @Override
-  public ExportRecord getExportAndDeleteFile(Account account) {
-    try {
-      String absolutePath = export(account);
-      Path path = Paths.get(absolutePath);
-      ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));
-      Files.deleteIfExists(path);
-      return new ExportRecord(path, resource);
-    } catch (IOException e) {
-      throw new ExportException("Could not get resource.");
-    }
-  }
-
-  @Override
   public String export(Account account) {
     String folderName = "./reports";
     try {
@@ -104,5 +91,18 @@ public class DefaultTransactionExportService implements TransactionExportService
       return Optional.of(Optional.ofNullable(e.getMessage()).orElse(StringUtils.EMPTY));
     }
     return Optional.empty();
+  }
+
+  @Override
+  public ExportRecord getExportAndDeleteFile(Account account) {
+    try {
+      String absolutePath = export(account);
+      Path path = Paths.get(absolutePath);
+      ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));
+      Files.deleteIfExists(path);
+      return new ExportRecord(path, resource);
+    } catch (IOException e) {
+      throw new ExportException("Could not get resource.");
+    }
   }
 }

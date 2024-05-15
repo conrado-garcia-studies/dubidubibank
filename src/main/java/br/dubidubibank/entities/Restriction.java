@@ -20,7 +20,7 @@ import lombok.*;
     uniqueConstraints =
         @UniqueConstraint(columnNames = {"account_id", "command_id", "end_time", "start_time"}))
 @ToString(callSuper = true)
-public class Restriction extends AbstractEntity implements DescriptedEntity {
+public class Restriction extends AbstractEntity implements Descripted {
   @EqualsAndHashCode.Include
   @JoinColumn(name = "account_id")
   @ManyToOne

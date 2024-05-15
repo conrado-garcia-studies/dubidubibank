@@ -8,6 +8,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.HttpCookie;
+import java.util.List;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -43,10 +45,26 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
     response.setCharacterEncoding("UTF-8");
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
     PrintWriter writer = response.getWriter();
+    String sessionId = getSessionId(details, response);
     AuthenticationSuccessRecord success =
-        new AuthenticationSuccessRecord("You are logged in.", details.getSessionId());
+        new AuthenticationSuccessRecord("You are logged in.", sessionId);
     String successJson = new Gson().toJson(success);
     writer.print(successJson);
     writer.flush();
+  }
+
+  private static String getSessionId(
+      WebAuthenticationDetails details, HttpServletResponse response) {
+    String sessionId = details.getSessionId();
+    if (sessionId == null) {
+      String cookieHeader = response.getHeader("Set-Cookie");
+      if (cookieHeader != null) {
+        List<HttpCookie> cookies = HttpCookie.parse(cookieHeader);
+        if (!cookies.isEmpty()) {
+          sessionId = cookies.getFirst().getValue();
+        }
+      }
+    }
+    return sessionId;
   }
 }

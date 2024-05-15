@@ -19,7 +19,7 @@ public abstract class AccountPostMapper {
   @BeanMapping(ignoreByDefault = true)
   @Mapping(target = "agencyNumber", source = "record.agencyNumber")
   @Mapping(target = "balance", source = "record.balance")
-  @Mapping(target = "enabled", source = "enabled")
+  @Mapping(target = "enabled", source = "record.enabled")
   @Mapping(target = "number", source = "record.number")
   @Mapping(
       target = "password",

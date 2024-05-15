@@ -81,7 +81,7 @@ public class RestrictionResource {
             description = "Account not found.",
             responseCode = "404")
       })
-  @Operation(summary = "Creates a restriction of an account")
+  @Operation(summary = "Creates a restriction of an account.")
   @PostMapping(
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE,

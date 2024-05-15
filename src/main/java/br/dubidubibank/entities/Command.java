@@ -13,7 +13,7 @@ import org.springframework.security.core.GrantedAuthority;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @ToString(callSuper = true)
-public class Command extends AbstractEntity implements DescriptedEntity, GrantedAuthority {
+public class Command extends AbstractEntity implements Descripted, GrantedAuthority {
   @NonNull
   @NotNull
   @Size(max = 255)

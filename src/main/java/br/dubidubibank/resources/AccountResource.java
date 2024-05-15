@@ -198,17 +198,20 @@ public class AccountResource {
       @RequestBody(
               content = @Content(schema = @Schema(implementation = AccountPatchRecord.class)),
               description =
-                  "The account to patch. It contains only a balance, which represents the balance of the"
-                      + " account after the patching. If the balance that comes from the body is greater than the"
-                      + " current balance of the account, then a deposit is performed. The deposited amount is equal to"
-                      + " the balance of the body minus the current balance. Otherwise it depends on the targetAccount"
-                      + " query to decide between transfer and withdraw. If both targetAccount.agencyNumber and"
-                      + " targetAccount.number are not null, then a transfer is performed. If both are mull, then a"
-                      + " withdraw is performed. The transferred or withdrawn amount is equal to the current balance"
-                      + " minus the balance of the body.",
+                  "The account to patch. It is required, but can have any property, as all property values are ignored."
+                      + " Ideally you can send an empty object.",
               required = true)
           @org.springframework.web.bind.annotation.RequestBody
           AccountPatchRecord patchRecord,
+      @Parameter(
+              description =
+                  "Represents the change the user wants to do to the balance. If it is positive, it is assumed that it"
+                      + " is a deposit. If it is negative, it is assumed that it is a withdraw or a transfer. If both"
+                      + " targetAccount.agencyNumber and targetAccount.number are not null, then a transfer is"
+                      + " performed. If both are null, then a withdraw is performed. BalanceDelta is required and"
+                      + " cannot be zero.")
+          @RequestParam(name = "balanceDelta")
+          Double balanceDelta,
       @Parameter(description = "The agency number of the target account to transfer to.")
           @RequestParam(name = "targetAccount.agencyNumber", required = false)
           Integer targetAccountAgencyNumber,
@@ -217,24 +220,21 @@ public class AccountResource {
           Integer targetAccountNumber) {
     Account account = sessionService.getAccount();
     Account patch = accountPatchMapper.toEntity(patchRecord);
-    checkPatchPermission(patch, targetAccountAgencyNumber, targetAccountNumber, account);
-    account = accountService.patch(account, patch, targetAccountAgencyNumber, targetAccountNumber);
+    checkPatchPermission(balanceDelta, targetAccountAgencyNumber, targetAccountNumber);
+    account =
+        accountService.patch(
+            account, balanceDelta, patch, targetAccountAgencyNumber, targetAccountNumber);
     AccountGetRecord accountRecord = accountGetMapper.toRecord(account);
     return ResponseEntity.ok().body(accountRecord);
   }
 
   private void checkPatchPermission(
-      Account patch,
-      Integer targetAccountAgencyNumber,
-      Integer targetAccountNumber,
-      Account account) {
-    if (targetAccountAgencyNumber != null && targetAccountNumber != null) {
-      if (patch.getBalance() < account.getBalance()) {
-        sessionService.checkPermission(CommandCode.TRANSFER);
-      }
-    } else if (patch.getBalance() > account.getBalance()) {
+      Double balanceDelta, Integer targetAccountAgencyNumber, Integer targetAccountNumber) {
+    if (targetAccountAgencyNumber != null && targetAccountNumber != null && balanceDelta < 0) {
+      sessionService.checkPermission(CommandCode.TRANSFER);
+    } else if (balanceDelta > 0) {
       sessionService.checkPermission(CommandCode.DEPOSIT);
-    } else if (patch.getBalance() < account.getBalance()) {
+    } else if (balanceDelta < 0) {
       sessionService.checkPermission(CommandCode.WITHDRAW);
     }
   }

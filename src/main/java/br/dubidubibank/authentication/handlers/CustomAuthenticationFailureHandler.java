@@ -19,7 +19,7 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
     response.setCharacterEncoding("UTF-8");
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
     PrintWriter writer = response.getWriter();
-    AuthenticationFailureRecord success = new AuthenticationFailureRecord("You are logged out.");
+    AuthenticationFailureRecord success = new AuthenticationFailureRecord("It was not possible to log in.");
     String successJson = new Gson().toJson(success);
     writer.print(successJson);
     writer.flush();

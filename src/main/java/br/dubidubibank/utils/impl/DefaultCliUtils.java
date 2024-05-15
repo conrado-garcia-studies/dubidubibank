@@ -2,7 +2,7 @@ package br.dubidubibank.utils.impl;
 
 import br.dubidubibank.entities.AccountType;
 import br.dubidubibank.entities.Command;
-import br.dubidubibank.entities.DescriptedEntity;
+import br.dubidubibank.entities.Descripted;
 import br.dubidubibank.utils.CliUtils;
 import java.time.DateTimeException;
 import java.time.LocalTime;
@@ -16,8 +16,7 @@ import java.util.stream.IntStream;
 public class DefaultCliUtils implements CliUtils {
   @Override
   public AccountType findAccountType(Collection<AccountType> accountTypes, String input) {
-    return accountTypes //
-        .stream() //
+    return accountTypes.stream() //
         .filter(
             accountType ->
                 accountType.getCliInput().isPresent() //
@@ -33,8 +32,7 @@ public class DefaultCliUtils implements CliUtils {
 
   @Override
   public String findAccountTypeInputDescriptions(Collection<AccountType> accountTypes) {
-    return accountTypes //
-        .stream() //
+    return accountTypes.stream() //
         .map(AccountType::getCliInputDescription) //
         .filter(Optional::isPresent) //
         .map(Optional::get) //
@@ -43,8 +41,7 @@ public class DefaultCliUtils implements CliUtils {
 
   @Override
   public Command findCommand(List<Command> commands, String input) {
-    return commands //
-        .stream() //
+    return commands.stream() //
         .filter(command -> isActualInputMatchesExpectedInput(command.getCliInput(), input)) //
         .findFirst() //
         .orElseThrow(
@@ -55,14 +52,13 @@ public class DefaultCliUtils implements CliUtils {
 
   @Override
   public String findCommandInputDescriptions(Collection<Command> commands) {
-    return commands //
-        .stream() //
+    return commands.stream() //
         .map(Command::getCliInputDescription) //
         .collect(Collectors.joining(", "));
   }
 
   @Override
-  public String findIndexSelectionInputDescriptions(List<? extends DescriptedEntity> entities) {
+  public String findIndexSelectionInputDescriptions(List<? extends Descripted> entities) {
     return IntStream.range(0, entities.size()) //
         .mapToObj(i -> String.format("[%d] %s", i + 1, entities.get(i).getDescription())) //
         .collect(Collectors.joining(", "));
@@ -70,7 +66,7 @@ public class DefaultCliUtils implements CliUtils {
 
   @Override
   public List<Command> findRestrictableCommands(Collection<Command> commands) {
-    return commands.stream() //
+    return commands.stream()
         .filter(Command::getRestrictable) //
         .sorted(Comparator.comparing(Command::getCliInputDescription)) //
         .toList();

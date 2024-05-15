@@ -54,7 +54,7 @@ public class DefaultAccountService implements AccountService, UserDetailsService
       }
     }
     account.deposit(amount);
-    repository.save(account);
+    account = repository.save(account);
     Transaction transaction = new Transaction(amount, command, account, account);
     transactionService.save(transaction);
     return account;
@@ -101,6 +101,7 @@ public class DefaultAccountService implements AccountService, UserDetailsService
   @Override
   public Account patch(
       Account account,
+      Double balanceDelta,
       Account patch,
       @Nullable Integer targetAccountAgencyNumber,
       @Nullable Integer targetAccountNumber) {
@@ -109,19 +110,19 @@ public class DefaultAccountService implements AccountService, UserDetailsService
           "Target account agency number and number must either be both null or both not null.");
     }
     if (targetAccountAgencyNumber != null) {
-      if (patch.getBalance() < account.getBalance()) {
+      if (balanceDelta < 0) {
         Account targetAccount =
             findByAgencyNumberAndNumber(targetAccountAgencyNumber, targetAccountNumber);
-        account = transfer(account.getBalance() - patch.getBalance(), account, targetAccount);
+        account = transfer(-1 * balanceDelta, account, targetAccount);
         return account;
       }
       throw new IllegalArgumentException("You cannot transfer a zero or negative value.");
     } else {
-      if (patch.getBalance() > account.getBalance()) {
-        account = deposit(account, patch.getBalance() - account.getBalance());
+      if (balanceDelta > 0) {
+        account = deposit(account, balanceDelta);
         return account;
-      } else if (patch.getBalance() < account.getBalance()) {
-        account = withdraw(account, account.getBalance() - patch.getBalance());
+      } else if (balanceDelta < 0) {
+        account = withdraw(account, -1 * balanceDelta);
         return account;
       }
       throw new IllegalArgumentException("You cannot deposit or withdraw a zero amount.");
@@ -219,7 +220,7 @@ public class DefaultAccountService implements AccountService, UserDetailsService
       }
     }
     account.withdraw(amount);
-    repository.save(account);
+    account = repository.save(account);
     Transaction transaction = new Transaction(amount, command, account, account);
     transactionService.save(transaction);
     return account;

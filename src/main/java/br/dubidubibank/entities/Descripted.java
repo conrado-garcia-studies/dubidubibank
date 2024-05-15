@@ -1,5 +1,5 @@
 package br.dubidubibank.entities;
 
-public interface DescriptedEntity {
+public interface Descripted {
   String getDescription();
 }

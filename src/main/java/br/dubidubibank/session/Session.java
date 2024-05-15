@@ -1,6 +1,7 @@
 package br.dubidubibank.session;
 
 import br.dubidubibank.entities.Account;
+import br.dubidubibank.entities.Descripted;
 import br.dubidubibank.enums.AccountTypeCode;
 import java.io.Serializable;
 import java.time.Instant;
@@ -9,7 +10,7 @@ import java.time.format.DateTimeFormatter;
 import lombok.*;
 
 @Data
-public class Session implements Serializable {
+public class Session implements Descripted, Serializable {
   @NonNull
   @Setter(AccessLevel.NONE)
   private Account account;
@@ -24,6 +25,7 @@ public class Session implements Serializable {
     this.creationInstant = Instant.now();
   }
 
+  @Override
   public String getDescription() {
     if (getAccount().getType().getCode() == AccountTypeCode.ANONYMOUS) {
       return getAccount().getDescription();

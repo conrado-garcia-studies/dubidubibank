@@ -8,9 +8,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Long> {
-  Optional<Account> findByAgencyNumberAndNumberAndPassword(
-      int agencyNumber, int number, String password);
-
   Optional<Account> findByAgencyNumberAndNumber(int agencyNumber, int number);
 
   Optional<Account> findByType(AccountType type);

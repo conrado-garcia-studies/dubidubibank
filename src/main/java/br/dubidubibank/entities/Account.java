@@ -26,11 +26,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"agency_number", "number"}))
 @ToString(callSuper = true)
 @ValidNumbers
-public class Account extends AbstractEntity implements DescriptedEntity, UserDetails {
+public class Account extends AbstractEntity implements Descripted, UserDetails {
   @EqualsAndHashCode.Include @NonNull @NotNull private Integer agencyNumber;
-
   @NonNull @NotNull private Double balance;
-
   @NonNull @NotNull private Boolean enabled;
 
   @Getter(AccessLevel.NONE)

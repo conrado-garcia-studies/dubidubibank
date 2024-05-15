@@ -9,7 +9,7 @@ public record RestrictionRecord(
     Account account,
     Double amount,
     Command command,
-    Long id,
     LocalTime endTime,
+    Long id,
     LocalTime startTime)
     implements Serializable {}

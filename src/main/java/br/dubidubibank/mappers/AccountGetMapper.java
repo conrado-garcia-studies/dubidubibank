@@ -19,7 +19,7 @@ public abstract class AccountGetMapper {
   @Mapping(
       target = "commands",
       expression = "java(commandGetMapper.toRecord(entity.getCommands()))")
-  @Mapping(target = "enabled", source = "enabled")
+  @Mapping(target = "enabled", source = "entity.enabled")
   @Mapping(target = "id", expression = "java(entity.getId().orElse(null))")
   @Mapping(target = "number", source = "entity.number")
   @Mapping(target = "person", expression = "java(personGetMapper.toRecord(entity.getPerson()))")

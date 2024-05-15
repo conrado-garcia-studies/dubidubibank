@@ -64,21 +64,6 @@ public class GlobalControllerExceptionHandler {
     return ResponseEntity.status(statusCode).body(error);
   }
 
-  @ExceptionHandler(EntityNotFoundException.class)
-  @ResponseStatus(HttpStatus.NOT_FOUND)
-  public ResponseEntity<ErrorRecord> handleEntityNotFound(
-      EntityNotFoundException exception, HttpServletRequest request) {
-    int statusCode = HttpStatus.NOT_FOUND.value();
-    ErrorRecord error =
-        new ErrorRecord(
-            "Entity not found.",
-            Instant.now(),
-            exception.getMessage(),
-            request.getRequestURI(),
-            statusCode);
-    return ResponseEntity.status(statusCode).body(error);
-  }
-
   @ExceptionHandler(EmptyResultDataAccessException.class)
   @ResponseStatus(HttpStatus.NOT_FOUND)
   public ResponseEntity<ErrorRecord> handleEmptyResultDataAccess(
@@ -87,6 +72,21 @@ public class GlobalControllerExceptionHandler {
     ErrorRecord error =
         new ErrorRecord(
             "Empty result data access.",
+            Instant.now(),
+            exception.getMessage(),
+            request.getRequestURI(),
+            statusCode);
+    return ResponseEntity.status(statusCode).body(error);
+  }
+
+  @ExceptionHandler(EntityNotFoundException.class)
+  @ResponseStatus(HttpStatus.NOT_FOUND)
+  public ResponseEntity<ErrorRecord> handleEntityNotFound(
+      EntityNotFoundException exception, HttpServletRequest request) {
+    int statusCode = HttpStatus.NOT_FOUND.value();
+    ErrorRecord error =
+        new ErrorRecord(
+            "Entity not found.",
             Instant.now(),
             exception.getMessage(),
             request.getRequestURI(),

@@ -17,6 +17,7 @@ public interface AccountService {
 
   Account patch(
       Account account,
+      Double balanceDelta,
       Account patch,
       @Nullable Integer targetAccountAgencyNumber,
       @Nullable Integer targetAccountNumber);

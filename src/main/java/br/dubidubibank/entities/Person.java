@@ -14,10 +14,10 @@ import lombok.*;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @ToString(callSuper = true)
-public class Person extends AbstractEntity implements DescriptedEntity {
+public class Person extends AbstractEntity implements Descripted {
   @Column(unique = true)
-  @EqualsAndHashCode.Include
   @Email
+  @EqualsAndHashCode.Include
   @NonNull
   @NotNull
   @Size(max = 255)

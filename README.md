@@ -15,10 +15,10 @@ Javadocs and JUnit tests, which I would usually write).
 Go to the folder where you cloned the project. Example assuming you cloned from the ~/dev folder:
 
 ```sh
-cd ~/dev/dubidubibankapplication
+cd ~/dev/dubidubibank
 ```
 
-Finally, start the application.
+Start the application.
 
 ```sh
 ./gradlew bootRun
@@ -27,10 +27,9 @@ Finally, start the application.
 ## CLI
 
 From the second delivery onwards, the CLI no longer works well through the terminal. The recommendation is to clone the
-project, import it with IntelliJ IDEA (Gradle project option), install the Lombok plugin for IntelliJ IDEA, open the
-application.properties file and change the value of the spring.profiles.active property to "cli", right click
-DubidubibankApplication.java file and click on the run option. In this case, it is necessary to install the Lombok
-plugin for IntelliJ IDEA.
+project, import it to IntelliJ IDEA (Gradle project option), install the Lombok plugin for IntelliJ IDEA, open the
+application.properties file, change the value of the spring.profiles.active property to "cli", right click
+DubidubibankApplication.java file and click the run option.
 
 # How to test it
 
@@ -39,7 +38,7 @@ and you need a non-Anonymous Account to log in).
 
 You can log in with one of these Accounts:
 
-| Agency | Account | Username | Password | Type     | Balance   | Commands                                                           | Limits                                                                          |
+| Agency | Account | Username | Password | Type     | Balance   | Commands                                                           | Restrictions                                                                    |
 |--------|---------|----------|----------|----------|-----------|--------------------------------------------------------------------|---------------------------------------------------------------------------------|
 | 1      | 1       | 1.1      | admin    | Admin    | $3,454.46 | Deposit, Export, Log out, Open, Quit, Restrict, Transfer, Withdraw | Deposit of $123.45 from 11:37 to 13:37, Transfer of $123.45 from 22:45 to 23:55 
 | 8      | 4       | 8.4      | checking | Checking | $4,234.27 | Deposit, Export, Log out, Quit, Restrict, Transfer, Withdraw       | Transfer of $1234.56 from 11:30 to 13:30, Withdraw of $1.23 from 22:45 to 23:55 
@@ -51,8 +50,8 @@ support for HTTPS. The login username is in the format "$agencyNumber.$accountNu
 8 and account 4, type "8.4" in the username field and "checking" in the password field and click the button to confirm.
 The session duration is set to 30 minutes.
 
-A common test path would be to log in as a user (e.g using "1.1" and "admin" for username and password), go to Swagger
-UI, get the result of GET /accounts/current and, with the IDs provided in the response, test other APIs.
+A common test path would be to log in as a user (e.g using "1.1" and "admin" for username and password, respectively),
+go to Swagger UI, get the result of GET /accounts/current and, with the IDs provided in the response, test other APIs.
 
 # How it works
 
@@ -65,24 +64,25 @@ The Commands that the users can choose are in AccountType within Account. So dif
 the AccountType. The Account with Anonymous AccountType has only Log In and Quit Commands. Checking has access to almost
 all Commands. Admin has the same access as Checking plus Open Command. Savings has access to some of the Commands.
 Command has the terminate flag so that as soon as the Command finishes executing, the program also ends. The
-restrictable flag tells whether the Command can be used to set Restriction. Each command has a CommandCode (enum). The
+restrictable flag tells whether the Command can be used to set Restrictions. Each command has a CommandCode (enum). The
 cliBeanCode tells what is the bean that executes the command. Cli is responsible for executing the logic that interacts
 with the user. The cliInput field in the Command is the expected user input (e.g., "q" for Quit). The
-cliInputDescription gives the user a hint as to what to type and what the command is about (e.g., "[Q]uit"). Command
-also represent a role. It is used to decide whether an Account has access to a resource.
+cliInputDescription gives the user a hint as to what to type and what the command is about (e.g., "[Q]uit"). A Command
+represents a role. It is used to decide whether an Account has access to a resource.
 
-In Account there are analogous fields: code, cliInput and cliInputDescription. Account also has a list of Restrictions.
-There are annotations that validate Restriction and ensure, for example, that there are no overlapping Restrictions.
-Restriction has a start and end LocalTimes and also a Command and an amount. To give an example of how times are
-handled in the project, when a user types 13:43 for the start and 14:57 for the end the times are saved as 13:43:00.000
-and 14:57:59.999, respectively. Restriction validations consider closed ranges. The Restrict command provides a CRUD of
-Restrictions. Amount is the only editable field.
+In Account Type there are analogous fields: code, cliInput and cliInputDescription. Account also has a list of
+Restrictions. There are annotations that validate Restrictions and ensure, for example, that there are no overlapping
+Restrictions. Restriction has a start LocalTime, an end LocalTime, a Command and an amount. When a user types 13:43 for
+the start and 14:57 for the end the times are saved as 13:43:00.000 and 14:57:59.999, respectively. Restriction
+validations consider closed ranges. The Restrict Command provides a CRUD of Restrictions. Amount is the only editable
+field.
 
 When the user deposits, transfers or withdraws, a Transaction record is created. Transactions are used to check whether
-the user has exceeded their limit for the day. TransactionExportService uses Transactions to generate a file in CSV
-format and save it to a folder (as requested in the exercise). After the file is created, the file path is printed.
+the user has exceeded the limit for the day for Deposit, Transfer or Withdraw Commands. TransactionExportService uses
+Transactions to generate a file in CSV format and save it to a folder (as requested in the exercise). After the file is
+created, the file path is printed.
 
-Getters, setters, and validation methods have been omitted from the diagram for easier visualization.
+Getters, setters and security methods have been omitted from the diagram for easier visualization.
 
 ```mermaid
 classDiagram
@@ -109,20 +109,19 @@ classDiagram
     class Account {
         -Integer agencyNumber
         -Double balance
-        -List<Restriction> restrictions
         -Integer number
         -String password
         -Person person
+        -List<Restriction> restrictions
         -AccountType type
         -ZoneId zoneId
+        +addRestriction(Restriction restriction) void
         +deposit(String amount) void
+        +removeRestriction(Restriction restriction) void
         +withdraw(String amount) void
-        +addRestriction(Limit restriction) void
-        +removeRestriction(Limit restriction) void
     }
 
     class AccountType {
-        -String cliBeanCode
         -String cliInput
         -String cliInputDescription
         -AccountTypeCode code
@@ -162,9 +161,9 @@ classDiagram
     }
 
     class Restriction {
-        -Double amount
         -Account account
-        -Command Command
+        -Double amount
+        -Command command
         -LocalTime endTime
         -LocalTime startTime
     }
@@ -184,10 +183,10 @@ classDiagram
 ```
 
 MainCli creates a Scanner and calls the CommandCli execute method passing the Scanner. CommandCli asks the person to
-choose a Command. Then it calls the execute method of the Cli which is mapped to the chosen Command. CommandCli does
-this until it finishes executing a Command with terminal equal to true. Cli is responsible for interacting with the
-person and optionally calls Daos, Services and Utils. The Clis extend TemplateCli, which prints a header containing the
-name of the bank and information about the session.
+choose a Command. Then it calls the execute method of the Cli which is associated with the chosen Command. CommandCli
+does this until it finishes executing a Command with terminal equal to true. Cli is responsible for interacting with the
+user and optionally calls Services. The Clis extend TemplateCli, which prints a header containing the name of the bank
+and information about the session.
 
 ```mermaid
 sequenceDiagram
